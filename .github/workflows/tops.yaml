@@ -1,1 +1,16 @@
 # TODO: implement this workflow
+
+on:
+  schedule:
+    # run once a day at 00:00
+    - cron: "0 0 * * *"
+
+jobs:
+  run script:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+      - run: deno run --allow-all --unstable ./main.ts
