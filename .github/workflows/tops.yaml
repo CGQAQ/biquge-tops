@@ -1,6 +1,9 @@
 # TODO: implement this workflow
 
 on:
+  push:
+    branches:
+      - master
   schedule:
     # run once a day at 00:00
     - cron: "0 0 * * *"
