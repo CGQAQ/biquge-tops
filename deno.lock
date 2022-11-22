@@ -58,9 +58,17 @@
   },
   "npm": {
     "specifiers": {
+      "@octokit/auth-action@2.0.2": "@octokit/auth-action@2.0.2",
       "@octokit/rest@19.0.5": "@octokit/rest@19.0.5_@octokit+core@4.1.0"
     },
     "packages": {
+      "@octokit/auth-action@2.0.2": {
+        "integrity": "sha512-uxYIO3eX7moMRr01jaLmfWAuj53cWPzF154yrqDkqySSrUmT0slQYx3uvDs5YC5twl3eeJYZaD5UQhl/8r5mWA==",
+        "dependencies": {
+          "@octokit/auth-token": "@octokit/auth-token@3.0.2",
+          "@octokit/types": "@octokit/types@8.0.0"
+        }
+      },
       "@octokit/auth-token@3.0.2": {
         "integrity": "sha512-pq7CwIMV1kmzkFTimdwjAINCXKTajZErLB4wMLYapR2nuB/Jpr66+05wOTZMSCBXP6n4DdDWT2W19Bm17vU69Q==",
         "dependencies": { "@octokit/types": "@octokit/types@8.0.0" }

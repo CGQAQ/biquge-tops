@@ -1,7 +1,7 @@
 console.log("hello world from deno");
 
 // ranking url
-import { Dom, Github } from "./deps.ts";
+import { Dom, Github, createActionAuth } from "./deps.ts";
 const { DOMParser } = Dom;
 
 const URL = "https://www.biquge.co/paihangbang/";
@@ -35,7 +35,11 @@ const result = [...container].map((category) => {
   };
 });
 
-const github = new Github();
+const auth = createActionAuth();
+const authed = await auth();
+const github = new Github({
+  auth: authed.token,
+});
 const myProjs = (
   await github.projects.listForUser({
     username: "cgqaq",
