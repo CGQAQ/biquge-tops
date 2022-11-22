@@ -128,6 +128,6 @@ try {
     ...commitArg,
     path: `rankings/rankings-latest.json`,
     sha: meta2?.data?.sha || undefined,
-    branch: "today",
+    branch: time,
   });
 }
