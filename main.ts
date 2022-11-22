@@ -101,6 +101,7 @@ try {
     ref: `refs/heads/${time}`,
     sha: branch.commit.sha,
   });
+} catch {
 } finally {
   const meta = await github.request(
     "GET /repos/{owner}/{repo}/contents/{file_path}",
