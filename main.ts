@@ -73,59 +73,61 @@ const commitArg = {
   },
 };
 
-// check branch exist
-await github.repos.getBranch({
-  owner: commitArg.owner,
-  repo: commitArg.repo,
-  branch: "XXXXXXXXXX",
-});
+try {
+  // check branch exist
+  await github.repos.getBranch({
+    owner: commitArg.owner,
+    repo: commitArg.repo,
+    branch: time,
+  });
 
-// get default branch hash
-const { data: defaultBranch } = await github.repos.get({
-  owner: commitArg.owner,
-  repo: commitArg.repo,
-});
+  // get default branch hash
+  const { data: defaultBranch } = await github.repos.get({
+    owner: commitArg.owner,
+    repo: commitArg.repo,
+  });
 
-// get branch hash
-const { data: branch } = await github.repos.getBranch({
-  owner: commitArg.owner,
-  repo: commitArg.repo,
-  branch: defaultBranch.default_branch,
-});
+  // get branch hash
+  const { data: branch } = await github.repos.getBranch({
+    owner: commitArg.owner,
+    repo: commitArg.repo,
+    branch: defaultBranch.default_branch,
+  });
 
-// create a branch called today
-await github.git.createRef({
-  owner: commitArg.owner,
-  repo: commitArg.repo,
-  ref: `refs/heads/${time}`,
-  sha: branch.commit.sha,
-});
+  // create a branch called today
+  await github.git.createRef({
+    owner: commitArg.owner,
+    repo: commitArg.repo,
+    ref: `refs/heads/${time}`,
+    sha: branch.commit.sha,
+  });
+} finally {
+  const meta = await github.request(
+    "GET /repos/{owner}/{repo}/contents/{file_path}",
+    {
+      owner: Deno.env.get("GITHUB_ACTOR") || "",
+      repo: Deno.env.get("GITHUB_REPOSITORY")?.split("/")?.[1] || "",
+      file_path: `rankings/rankings-${time}.json`,
+    }
+  );
+  await github.rest.repos.createOrUpdateFileContents({
+    ...commitArg,
+    sha: meta?.data?.sha || undefined,
+    branch: time,
+  });
 
-const meta = await github.request(
-  "GET /repos/{owner}/{repo}/contents/{file_path}",
-  {
-    owner: Deno.env.get("GITHUB_ACTOR") || "",
-    repo: Deno.env.get("GITHUB_REPOSITORY")?.split("/")?.[1] || "",
-    file_path: `rankings/rankings-${time}.json`,
-  }
-);
-await github.rest.repos.createOrUpdateFileContents({
-  ...commitArg,
-  sha: meta?.data?.sha || undefined,
-  branch: time,
-});
-
-const meta2 = await github.request(
-  "GET /repos/{owner}/{repo}/contents/{file_path}",
-  {
-    owner: Deno.env.get("GITHUB_ACTOR") || "",
-    repo: Deno.env.get("GITHUB_REPOSITORY")?.split("/")?.[1] || "",
-    file_path: `rankings/rankings-latest.json`,
-  }
-);
-await github.rest.repos.createOrUpdateFileContents({
-  ...commitArg,
-  path: `rankings/rankings-latest.json`,
-  sha: meta2?.data?.sha || undefined,
-  branch: "today",
-});
+  const meta2 = await github.request(
+    "GET /repos/{owner}/{repo}/contents/{file_path}",
+    {
+      owner: Deno.env.get("GITHUB_ACTOR") || "",
+      repo: Deno.env.get("GITHUB_REPOSITORY")?.split("/")?.[1] || "",
+      file_path: `rankings/rankings-latest.json`,
+    }
+  );
+  await github.rest.repos.createOrUpdateFileContents({
+    ...commitArg,
+    path: `rankings/rankings-latest.json`,
+    sha: meta2?.data?.sha || undefined,
+    branch: "today",
+  });
+}
