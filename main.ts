@@ -8,6 +8,7 @@ import {
   format,
   b64Encode,
   addPaddingToBase64url,
+  Buffer,
 } from "./deps.ts";
 const { DOMParser } = Dom;
 
@@ -58,9 +59,10 @@ const x = await github.rest.repos.createOrUpdateFileContents({
   repo: Deno.env.get("GITHUB_REPOSITORY")?.split("/")?.[1] || "",
   path: `rankings/ranking-${time}.json`,
   message: `update ranking ${time}`,
-  content: addPaddingToBase64url(
-    b64Encode(new TextEncoder().encode(JSON.stringify(result)))
-  ),
+  // content: addPaddingToBase64url(
+  //   b64Encode(new TextEncoder().encode(JSON.stringify(result)))
+  // ),
+  content: Buffer.from(JSON.stringify(result)).toString("base64"),
 });
 console.log("after");
 

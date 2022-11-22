@@ -10,3 +10,5 @@ export {
   encode as b64Encode,
   addPaddingToBase64url,
 } from "https://deno.land/std@0.74.0/encoding/base64url.ts";
+
+export { Buffer } from "https://deno.land/std@0.74.0/node/buffer.ts";
