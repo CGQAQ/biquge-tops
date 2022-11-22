@@ -51,7 +51,7 @@ const x = await github.rest.repos.createOrUpdateFileContents({
   repo: Deno.env.get("GITHUB_REPOSITORY")?.split("/")?.[1] || "",
   path: `rankings/ranking-${time}.json`,
   message: `update ranking ${time}`,
-  content: JSON.stringify(result),
+  content: btoa(JSON.stringify(result)),
 });
 console.log("after");
 
