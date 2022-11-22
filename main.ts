@@ -152,7 +152,7 @@ try {
     head: time,
     base: defaultBranch.default_branch,
     body: `# New ranking: 
-# Time: ${time2}
+### UpdateTime: ${time2}
 \`\`\`json
 ${JSON.stringify(result, null, 2)}
 \`\`\`
