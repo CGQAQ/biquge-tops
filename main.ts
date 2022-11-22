@@ -78,14 +78,20 @@ const { data: defaultBranch } = await github.repos.get({
   owner: commitArg.owner,
   repo: commitArg.repo,
 });
-console.log("defaultBranch: ", defaultBranch);
+
+// get branch hash
+const { data: branch } = await github.repos.getBranch({
+  owner: commitArg.owner,
+  repo: commitArg.repo,
+  branch: defaultBranch.default_branch,
+});
 
 // create a branch called today
 await github.git.createRef({
   owner: commitArg.owner,
   repo: commitArg.repo,
   ref: `refs/heads/${time}`,
-  sha: defaultBranch.default_branch,
+  sha: branch.commit.sha,
 });
 
 const meta = await github.request(
