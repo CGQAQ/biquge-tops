@@ -17,3 +17,5 @@ jobs:
         with:
           deno-version: v1.x
       - run: deno task start
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
