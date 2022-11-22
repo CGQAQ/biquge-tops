@@ -37,14 +37,9 @@ const result = [...container].map((category) => {
 
 const auth = createActionAuth();
 const authed = await auth();
-console.log("sss", authed);
 const github = new Github({
   auth: authed.token,
 });
-const myProjs = (
-  await github.projects.listForUser({
-    username: "cgqaq",
-  })
-).data;
+const x = await github.rest.repos.listPublic();
 
-console.log(myProjs);
+console.log(x);
