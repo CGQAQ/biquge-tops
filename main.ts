@@ -126,7 +126,7 @@ try {
   await github.git.createRef({
     owner: commitArg.owner,
     repo: commitArg.repo,
-    ref: `refs/heads/${time}`,
+    ref: `refs/heads/${time2}`,
     sha: branch.commit.sha,
   });
 } finally {
@@ -136,14 +136,14 @@ try {
       owner: Deno.env.get("GITHUB_ACTOR") || "",
       repo: Deno.env.get("GITHUB_REPOSITORY")?.split("/")?.[1] || "",
       file_path: `rankings/rankings-${time}.json`,
-      ref: time,
+      ref: time2,
     }
   );
 
   await github.rest.repos.createOrUpdateFileContents({
     ...commitArg,
     sha: meta1?.data?.sha || undefined,
-    branch: time,
+    branch: time2,
   });
 
   const meta2 = await github.request(
@@ -152,21 +152,21 @@ try {
       owner: Deno.env.get("GITHUB_ACTOR") || "",
       repo: Deno.env.get("GITHUB_REPOSITORY")?.split("/")?.[1] || "",
       file_path: `rankings/rankings-latest.json`,
-      ref: time,
+      ref: time2,
     }
   );
   await github.rest.repos.createOrUpdateFileContents({
     ...commitArg,
     path: `rankings/rankings-latest.json`,
     sha: meta2?.data?.sha || undefined,
-    branch: time,
+    branch: time2,
   });
 
   const pr = await github.rest.pulls.create({
     owner: commitArg.owner,
     repo: commitArg.repo,
     title: `update ranking ${time2}`,
-    head: time,
+    head: time2,
     base: defaultBranch.default_branch,
     body: `# New ranking: 
 ### UpdateTime: ${time2}
@@ -189,6 +189,6 @@ ${JSON.stringify(result, null, 2)}
   await github.rest.git.deleteRef({
     owner: commitArg.owner,
     repo: commitArg.repo,
-    ref: `heads/${time}`,
+    ref: `heads/${time2}`,
   });
 }
