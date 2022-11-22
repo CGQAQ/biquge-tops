@@ -154,6 +154,7 @@ ${JSON.stringify(result, null, 2)}
     repo: commitArg.repo,
     pull_number: pr.data.number,
     merge_method: "squash",
+    commit_message: "auto merged by github action",
   });
 
   // delete branch
