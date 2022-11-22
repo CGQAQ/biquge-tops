@@ -125,16 +125,17 @@ try {
 
   await github.rest.repos.createOrUpdateFileContents({
     ...commitArg,
-    sha: meta?.data?.sha || undefined,
+    sha: meta1?.data?.sha || undefined,
     branch: time,
   });
 
   const meta2 = await github.request(
-    "GET /repos/{owner}/{repo}/contents/{file_path}",
+    "GET /repos/{owner}/{repo}/contents/{file_path}{?ref}",
     {
       owner: Deno.env.get("GITHUB_ACTOR") || "",
       repo: Deno.env.get("GITHUB_REPOSITORY")?.split("/")?.[1] || "",
       file_path: `rankings/rankings-latest.json`,
+      ref: time,
     }
   );
   await github.rest.repos.createOrUpdateFileContents({
