@@ -75,7 +75,18 @@ const commitArg = {
   },
 };
 
+const meta = await github.request(
+  "GET /repos/{owner}/{repo}/contents/{file_path}",
+  {
+    owner: Deno.env.get("GITHUB_ACTOR") || "",
+    repo: Deno.env.get("GITHUB_REPOSITORY")?.split("/")?.[1] || "",
+    file_path: `rankings/rankings-${time}.json`,
+  }
+);
+console.log("meta: ", meta);
+
 await github.rest.repos.createOrUpdateFileContents(commitArg);
+
 await github.rest.repos.createOrUpdateFileContents({
   ...commitArg,
   path: `rankings/rankings-latest.json`,
