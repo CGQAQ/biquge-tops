@@ -151,12 +151,11 @@ try {
     title: `update ranking ${time2}`,
     head: time,
     base: defaultBranch.default_branch,
-    body: `
-    # New ranking: 
-    # Time: ${time2}
-    \`\`\`json
-    ${JSON.stringify(result, null, 2)}
-    \`\`\`
-    `,
+    body: `# New ranking: 
+# Time: ${time2}
+\`\`\`json
+${JSON.stringify(result, null, 2)}
+\`\`\`
+`,
   });
 }
