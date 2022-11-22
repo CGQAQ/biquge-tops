@@ -41,7 +41,7 @@ const github = new Github({
   auth: authed.token,
 });
 
-console.log("whoami: ", await github.users.getAuthenticated());
+console.log("whoami: ", await github.auth());
 console.log("GITHUB_ACTOR: ", Deno.env.get("GITHUB_ACTOR"));
 console.log("GITHUB_REPOSITORY: ", Deno.env.get("GITHUB_REPOSITORY"));
 
