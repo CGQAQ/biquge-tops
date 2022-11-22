@@ -83,11 +83,21 @@ const meta = await github.request(
     file_path: `rankings/rankings-${time}.json`,
   }
 );
-console.log("meta: ", meta);
+await github.rest.repos.createOrUpdateFileContents({
+  ...commitArg,
+  sha: meta?.data?.sha || undefined,
+});
 
-await github.rest.repos.createOrUpdateFileContents(commitArg);
-
+const meta2 = await github.request(
+  "GET /repos/{owner}/{repo}/contents/{file_path}",
+  {
+    owner: Deno.env.get("GITHUB_ACTOR") || "",
+    repo: Deno.env.get("GITHUB_REPOSITORY")?.split("/")?.[1] || "",
+    file_path: `rankings/rankings-latest.json`,
+  }
+);
 await github.rest.repos.createOrUpdateFileContents({
   ...commitArg,
   path: `rankings/rankings-latest.json`,
+  sha: meta2?.data?.sha || undefined,
 });
