@@ -41,6 +41,10 @@ const github = new Github({
   auth: authed.token,
 });
 
+console.log("whoami: ", await github.users.getAuthenticated());
+console.log("GITHUB_ACTOR: ", Deno.env.get("GITHUB_ACTOR"));
+console.log("GITHUB_REPOSITORY: ", Deno.env.get("GITHUB_REPOSITORY"));
+
 const time = format(new Date(), "yyyy-MM-dd HH:mm:ss");
 const x = await github.rest.repos.createOrUpdateFileContents({
   owner: Deno.env.get("GITHUB_ACTOR") || "",
