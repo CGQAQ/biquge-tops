@@ -84,6 +84,7 @@ const meta = await github.request(
 await github.rest.repos.createOrUpdateFileContents({
   ...commitArg,
   sha: meta?.data?.sha || undefined,
+  branch: "today",
 });
 
 const meta2 = await github.request(
@@ -98,4 +99,5 @@ await github.rest.repos.createOrUpdateFileContents({
   ...commitArg,
   path: `rankings/rankings-latest.json`,
   sha: meta2?.data?.sha || undefined,
+  branch: "today",
 });
