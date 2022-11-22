@@ -112,6 +112,17 @@ try {
   );
   console.log("meta: ", meta);
 
+  const meta1 = await github.request(
+    "GET /repos/{owner}/{repo}/contents/{file_path}{?ref}",
+    {
+      owner: Deno.env.get("GITHUB_ACTOR") || "",
+      repo: Deno.env.get("GITHUB_REPOSITORY")?.split("/")?.[1] || "",
+      file_path: `rankings/rankings-${time}.json`,
+      ref: time,
+    }
+  );
+  console.log("meta1: ", meta1);
+
   await github.rest.repos.createOrUpdateFileContents({
     ...commitArg,
     sha: meta?.data?.sha || undefined,
