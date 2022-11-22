@@ -1,5 +1,7 @@
 # TODO: implement this workflow
 
+permissions: write-all
+
 on:
   push:
     branches:
