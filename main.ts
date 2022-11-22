@@ -110,6 +110,8 @@ try {
       file_path: `rankings/rankings-${time}.json`,
     }
   );
+  console.log("meta: ", meta);
+
   await github.rest.repos.createOrUpdateFileContents({
     ...commitArg,
     sha: meta?.data?.sha || undefined,
