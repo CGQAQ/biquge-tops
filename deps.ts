@@ -5,3 +5,5 @@ export { Octokit as Github } from "npm:@octokit/rest@19.0.5";
 export { createActionAuth } from "npm:@octokit/auth-action@2.0.2";
 
 export { format } from "https://deno.land/std@0.67.0/datetime/mod.ts";
+
+export { encode as b64Encode } from "https://deno.land/std@0.74.0/encoding/base64url.ts";
