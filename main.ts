@@ -1,7 +1,7 @@
 console.log("hello world from deno");
 
 // ranking url
-import { Dom, Github, createActionAuth } from "./deps.ts";
+import { Dom, Github, createActionAuth, format } from "./deps.ts";
 const { DOMParser } = Dom;
 
 const URL = "https://www.biquge.co/paihangbang/";
@@ -40,8 +40,15 @@ const authed = await auth();
 const github = new Github({
   auth: authed.token,
 });
-console.log("before");
-const x = await github.rest.repos.listForAuthenticatedUser();
+
+const time = format(new Date(), "yyyy-MM-dd HH:mm:ss");
+const x = await github.rest.repos.createOrUpdateFileContents({
+  owner: Deno.env.get("GITHUB_ACTOR") || "",
+  repo: Deno.env.get("GITHUB_REPOSITORY") || "",
+  path: `rankings/ranking-${time}.json`,
+  message: `update ranking ${time}`,
+  content: JSON.stringify(result),
+});
 console.log("after");
 
 console.log(x);
