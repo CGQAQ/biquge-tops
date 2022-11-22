@@ -161,6 +161,6 @@ ${JSON.stringify(result, null, 2)}
   await github.rest.git.deleteRef({
     owner: commitArg.owner,
     repo: commitArg.repo,
-    ref: `refs/heads/${time}`,
+    ref: `heads/${time}`,
   });
 }
