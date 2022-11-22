@@ -102,16 +102,6 @@ try {
     sha: branch.commit.sha,
   });
 } finally {
-  const meta = await github.request(
-    "GET /repos/{owner}/{repo}/contents/{file_path}",
-    {
-      owner: Deno.env.get("GITHUB_ACTOR") || "",
-      repo: Deno.env.get("GITHUB_REPOSITORY")?.split("/")?.[1] || "",
-      file_path: `rankings/rankings-${time}.json`,
-    }
-  );
-  console.log("meta: ", meta);
-
   const meta1 = await github.request(
     "GET /repos/{owner}/{repo}/contents/{file_path}{?ref}",
     {
@@ -121,7 +111,6 @@ try {
       ref: time,
     }
   );
-  console.log("meta1: ", meta1);
 
   await github.rest.repos.createOrUpdateFileContents({
     ...commitArg,
@@ -159,6 +148,7 @@ ${JSON.stringify(result, null, 2)}
 `,
   });
 
+  // merge: squash
   await github.rest.pulls.merge({
     owner: commitArg.owner,
     repo: commitArg.repo,
@@ -166,6 +156,7 @@ ${JSON.stringify(result, null, 2)}
     merge_method: "squash",
   });
 
+  // delete branch
   await github.rest.git.deleteRef({
     owner: commitArg.owner,
     repo: commitArg.repo,
