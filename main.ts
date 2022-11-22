@@ -107,12 +107,13 @@ const { data: defaultBranch } = await github.repos.get({
   repo: commitArg.repo,
 });
 
+const newBranchName = time2.replace(/ /g, "_").replace(/:/g, "_");
 try {
   // check branch exist
   await github.repos.getBranch({
     owner: commitArg.owner,
     repo: commitArg.repo,
-    branch: time,
+    branch: newBranchName,
   });
 } catch {
   // get branch hash
@@ -126,7 +127,7 @@ try {
   await github.git.createRef({
     owner: commitArg.owner,
     repo: commitArg.repo,
-    ref: `refs/heads/${time2}`,
+    ref: `refs/heads/${newBranchName}`,
     sha: branch.commit.sha,
   });
 } finally {
@@ -136,14 +137,14 @@ try {
       owner: Deno.env.get("GITHUB_ACTOR") || "",
       repo: Deno.env.get("GITHUB_REPOSITORY")?.split("/")?.[1] || "",
       file_path: `rankings/rankings-${time}.json`,
-      ref: time2,
+      ref: newBranchName,
     }
   );
 
   await github.rest.repos.createOrUpdateFileContents({
     ...commitArg,
     sha: meta1?.data?.sha || undefined,
-    branch: time2,
+    branch: newBranchName,
   });
 
   const meta2 = await github.request(
@@ -152,24 +153,24 @@ try {
       owner: Deno.env.get("GITHUB_ACTOR") || "",
       repo: Deno.env.get("GITHUB_REPOSITORY")?.split("/")?.[1] || "",
       file_path: `rankings/rankings-latest.json`,
-      ref: time2,
+      ref: newBranchName,
     }
   );
   await github.rest.repos.createOrUpdateFileContents({
     ...commitArg,
     path: `rankings/rankings-latest.json`,
     sha: meta2?.data?.sha || undefined,
-    branch: time2,
+    branch: newBranchName,
   });
 
   const pr = await github.rest.pulls.create({
     owner: commitArg.owner,
     repo: commitArg.repo,
     title: `update ranking ${time2}`,
-    head: time2,
+    head: newBranchName,
     base: defaultBranch.default_branch,
     body: `# New ranking: 
-### UpdateTime: ${time2}
+### UpdateTime: ${newBranchName}
 \`\`\`json
 ${JSON.stringify(result, null, 2)}
 \`\`\`
@@ -189,6 +190,6 @@ ${JSON.stringify(result, null, 2)}
   await github.rest.git.deleteRef({
     owner: commitArg.owner,
     repo: commitArg.repo,
-    ref: `heads/${time2}`,
+    ref: `heads/${newBranchName}`,
   });
 }
