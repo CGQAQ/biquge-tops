@@ -73,6 +73,12 @@ const commitArg = {
   },
 };
 
+// get default branch hash
+const { data: defaultBranch } = await github.repos.get({
+  owner: commitArg.owner,
+  repo: commitArg.repo,
+});
+
 try {
   // check branch exist
   await github.repos.getBranch({
@@ -81,12 +87,6 @@ try {
     branch: time,
   });
 } catch {
-  // get default branch hash
-  const { data: defaultBranch } = await github.repos.get({
-    owner: commitArg.owner,
-    repo: commitArg.repo,
-  });
-
   // get branch hash
   const { data: branch } = await github.repos.getBranch({
     owner: commitArg.owner,
@@ -143,5 +143,13 @@ try {
     path: `rankings/rankings-latest.json`,
     sha: meta2?.data?.sha || undefined,
     branch: time,
+  });
+
+  await github.rest.pulls.create({
+    owner: commitArg.owner,
+    repo: commitArg.repo,
+    title: `update ranking ${time2}`,
+    head: time,
+    base: defaultBranch.default_branch,
   });
 }
