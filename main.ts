@@ -73,6 +73,13 @@ const commitArg = {
   },
 };
 
+// check branch exist
+await github.repos.getBranch({
+  owner: commitArg.owner,
+  repo: commitArg.repo,
+  branch: "XXXXXXXXXX",
+});
+
 // get default branch hash
 const { data: defaultBranch } = await github.repos.get({
   owner: commitArg.owner,
