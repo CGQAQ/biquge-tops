@@ -80,7 +80,7 @@ try {
     repo: commitArg.repo,
     branch: time,
   });
-
+} catch {
   // get default branch hash
   const { data: defaultBranch } = await github.repos.get({
     owner: commitArg.owner,
@@ -101,7 +101,6 @@ try {
     ref: `refs/heads/${time}`,
     sha: branch.commit.sha,
   });
-} catch {
 } finally {
   const meta = await github.request(
     "GET /repos/{owner}/{repo}/contents/{file_path}",
