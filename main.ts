@@ -37,6 +37,7 @@ const result = [...container].map((category) => {
 
 const auth = createActionAuth();
 const authed = await auth();
+console.log("sss", authed);
 const github = new Github({
   auth: authed.token,
 });
