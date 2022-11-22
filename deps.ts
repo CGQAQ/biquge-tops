@@ -6,4 +6,7 @@ export { createActionAuth } from "npm:@octokit/auth-action@2.0.2";
 
 export { format } from "https://deno.land/std@0.67.0/datetime/mod.ts";
 
-export { encode as b64Encode } from "https://deno.land/std@0.74.0/encoding/base64url.ts";
+export {
+  encode as b64Encode,
+  addPaddingToBase64url,
+} from "https://deno.land/std@0.74.0/encoding/base64url.ts";

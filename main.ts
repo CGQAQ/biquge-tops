@@ -1,7 +1,14 @@
 console.log("hello world from deno");
 
 // ranking url
-import { Dom, Github, createActionAuth, format, b64Encode } from "./deps.ts";
+import {
+  Dom,
+  Github,
+  createActionAuth,
+  format,
+  b64Encode,
+  addPaddingToBase64url,
+} from "./deps.ts";
 const { DOMParser } = Dom;
 
 const URL = "https://www.biquge.co/paihangbang/";
@@ -51,7 +58,9 @@ const x = await github.rest.repos.createOrUpdateFileContents({
   repo: Deno.env.get("GITHUB_REPOSITORY")?.split("/")?.[1] || "",
   path: `rankings/ranking-${time}.json`,
   message: `update ranking ${time}`,
-  content: b64Encode(new TextEncoder().encode(JSON.stringify(result))),
+  content: addPaddingToBase64url(
+    b64Encode(new TextEncoder().encode(JSON.stringify(result)))
+  ),
 });
 console.log("after");
 
