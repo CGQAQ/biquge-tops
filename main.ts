@@ -105,7 +105,7 @@ const meta = await github.request(
 await github.rest.repos.createOrUpdateFileContents({
   ...commitArg,
   sha: meta?.data?.sha || undefined,
-  branch: "today",
+  branch: time,
 });
 
 const meta2 = await github.request(
