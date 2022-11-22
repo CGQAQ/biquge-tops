@@ -40,6 +40,6 @@ const authed = await auth();
 const github = new Github({
   auth: authed.token,
 });
-const x = await github.rest.repos.listPublic();
+const x = await github.rest.repos.listForAuthenticatedUser();
 
 console.log(x);
