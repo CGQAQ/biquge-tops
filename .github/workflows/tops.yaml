@@ -6,9 +6,9 @@ on:
       - main
   schedule:
     # run once a day at 00:00
-    # - cron: "0 0 * * *"/
+    - cron: "0 0 * * *"/
     # run once a minute
-    - cron: "*/1 * * * *"
+    # - cron: "*/1 * * * *"
 
 jobs:
   run_script:
