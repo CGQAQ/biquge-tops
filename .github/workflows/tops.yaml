@@ -20,3 +20,5 @@ jobs:
       - run: deno task start
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NAME: ${{ secrets.CGQAQ_NAME }}
+          EMAIL: ${{ secrets.CGQAQ_EMAIL }}

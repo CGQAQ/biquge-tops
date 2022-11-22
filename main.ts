@@ -49,12 +49,11 @@ const github = new Github({
   auth: authed.token,
 });
 
-console.log("whoami: ", await github.auth());
-console.log("GITHUB_ACTOR: ", Deno.env.get("GITHUB_ACTOR"));
-console.log("GITHUB_REPOSITORY: ", Deno.env.get("GITHUB_REPOSITORY"));
+// console.log("GITHUB_ACTOR: ", Deno.env.get("GITHUB_ACTOR"));
+// console.log("GITHUB_REPOSITORY: ", Deno.env.get("GITHUB_REPOSITORY"));
 
 const time = format(new Date(), "yyyy-MM-dd__hh_mm_ss");
-const x = await github.rest.repos.createOrUpdateFileContents({
+await github.rest.repos.createOrUpdateFileContents({
   owner: Deno.env.get("GITHUB_ACTOR") || "",
   repo: Deno.env.get("GITHUB_REPOSITORY")?.split("/")?.[1] || "",
   path: `rankings/ranking-${time}.json`,
@@ -63,7 +62,14 @@ const x = await github.rest.repos.createOrUpdateFileContents({
   //   b64Encode(new TextEncoder().encode(JSON.stringify(result)))
   // ),
   content: Buffer.from(JSON.stringify(result)).toString("base64"),
+  committer: {
+    name: Deno.env.get("CGQAQ_NAME") || "dependabot[bot]",
+    email:
+      Deno.env.get("CGQAQ_EMAIL") || "15936231+CGQAQ@users.noreply.github.com",
+  },
+  author: {
+    name: Deno.env.get("CGQAQ_NAME") || "dependabot[bot]",
+    email:
+      Deno.env.get("CGQAQ_EMAIL") || "15936231+CGQAQ@users.noreply.github.com",
+  },
 });
-console.log("after");
-
-console.log(x);
