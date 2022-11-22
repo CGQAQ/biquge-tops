@@ -1,5 +1,3 @@
-console.log("hello world from deno");
-
 // ranking url
 import {
   Dom,
