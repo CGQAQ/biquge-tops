@@ -1,7 +1,5 @@
 # TODO: implement this workflow
 
-permissions: write-all
-
 on:
   push:
     branches:
@@ -12,6 +10,7 @@ on:
 
 jobs:
   run_script:
+    permissions: write-all
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
