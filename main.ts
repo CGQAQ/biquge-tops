@@ -60,7 +60,7 @@ const commitArg = {
   // content: addPaddingToBase64url(
   //   b64Encode(new TextEncoder().encode(JSON.stringify(result)))
   // ),
-  content: Buffer.from(JSON.stringify(result)).toString("base64"),
+  content: Buffer.from(JSON.stringify(result, null, 2)).toString("base64"),
   committer: {
     name: Deno.env.get("CGQAQ_NAME") || "dependabot[bot]",
     email:
