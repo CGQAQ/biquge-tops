@@ -145,7 +145,7 @@ try {
     branch: time,
   });
 
-  await github.rest.pulls.create({
+  const pr = await github.rest.pulls.create({
     owner: commitArg.owner,
     repo: commitArg.repo,
     title: `update ranking ${time2}`,
@@ -157,5 +157,18 @@ try {
 ${JSON.stringify(result, null, 2)}
 \`\`\`
 `,
+  });
+
+  await github.rest.pulls.merge({
+    owner: commitArg.owner,
+    repo: commitArg.repo,
+    pull_number: pr.data.number,
+    merge_method: "squash",
+  });
+
+  await github.rest.git.deleteRef({
+    owner: commitArg.owner,
+    repo: commitArg.repo,
+    ref: `refs/heads/${time}`,
   });
 }
