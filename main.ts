@@ -157,6 +157,8 @@ try {
   /* NOOP */
 }
 
+console.log("meta1", meta1?.data?.sha || undefined);
+console.log("meta2", meta2?.data?.sha || undefined);
 await github.rest.repos.createOrUpdateFileContents({
   ...commitArg,
   sha: meta1?.data?.sha || undefined,
