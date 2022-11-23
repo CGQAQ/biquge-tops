@@ -130,8 +130,11 @@ try {
     ref: `refs/heads/${newBranchName}`,
     sha: branch.commit.sha,
   });
-} finally {
-  const meta1 = await github.request(
+}
+
+let meta1, meta2;
+try {
+  meta1 = await github.request(
     "GET /repos/{owner}/{repo}/contents/{file_path}{?ref}",
     {
       owner: Deno.env.get("GITHUB_ACTOR") || "",
@@ -141,13 +144,7 @@ try {
     }
   );
 
-  await github.rest.repos.createOrUpdateFileContents({
-    ...commitArg,
-    sha: meta1?.data?.sha || undefined,
-    branch: newBranchName,
-  });
-
-  const meta2 = await github.request(
+  meta2 = await github.request(
     "GET /repos/{owner}/{repo}/contents/{file_path}{?ref}",
     {
       owner: Deno.env.get("GITHUB_ACTOR") || "",
@@ -156,40 +153,49 @@ try {
       ref: newBranchName,
     }
   );
-  await github.rest.repos.createOrUpdateFileContents({
-    ...commitArg,
-    path: `rankings/rankings-latest.json`,
-    sha: meta2?.data?.sha || undefined,
-    branch: newBranchName,
-  });
+} catch {
+  /* NOOP */
+}
 
-  const pr = await github.rest.pulls.create({
-    owner: commitArg.owner,
-    repo: commitArg.repo,
-    title: `update ranking ${time2}`,
-    head: newBranchName,
-    base: defaultBranch.default_branch,
-    body: `# New ranking: 
+await github.rest.repos.createOrUpdateFileContents({
+  ...commitArg,
+  sha: meta1?.data?.sha || undefined,
+  branch: newBranchName,
+});
+
+await github.rest.repos.createOrUpdateFileContents({
+  ...commitArg,
+  path: `rankings/rankings-latest.json`,
+  sha: meta2?.data?.sha || undefined,
+  branch: newBranchName,
+});
+
+const pr = await github.rest.pulls.create({
+  owner: commitArg.owner,
+  repo: commitArg.repo,
+  title: `update ranking ${time2}`,
+  head: newBranchName,
+  base: defaultBranch.default_branch,
+  body: `# New ranking: 
 ### UpdateTime: ${newBranchName}
 \`\`\`json
 ${JSON.stringify(result, null, 2)}
 \`\`\`
 `,
-  });
+});
 
-  // merge: squash
-  await github.rest.pulls.merge({
-    owner: commitArg.owner,
-    repo: commitArg.repo,
-    pull_number: pr.data.number,
-    merge_method: "squash",
-    commit_message: "auto merged by github action",
-  });
+// merge: squash
+await github.rest.pulls.merge({
+  owner: commitArg.owner,
+  repo: commitArg.repo,
+  pull_number: pr.data.number,
+  merge_method: "squash",
+  commit_message: "auto merged by github action",
+});
 
-  // delete branch
-  await github.rest.git.deleteRef({
-    owner: commitArg.owner,
-    repo: commitArg.repo,
-    ref: `heads/${newBranchName}`,
-  });
-}
+// delete branch
+await github.rest.git.deleteRef({
+  owner: commitArg.owner,
+  repo: commitArg.repo,
+  ref: `heads/${newBranchName}`,
+});
