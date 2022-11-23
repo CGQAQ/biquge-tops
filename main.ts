@@ -143,7 +143,11 @@ try {
       ref: newBranchName,
     }
   );
+} catch {
+  /* NOOP */
+}
 
+try {
   meta2 = await github.request(
     "GET /repos/{owner}/{repo}/contents/{file_path}{?ref}",
     {
